@@ -1,0 +1,12 @@
+.UserOutput {
+  width: 60%;
+  text-align: justify;
+  font-style: italic;
+  margin: auto;
+}
+
+.UserOutput .attribution {
+  font-weight: bold;
+  font-size: 1.5em;
+  font-style: normal;
+}

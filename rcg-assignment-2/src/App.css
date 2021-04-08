@@ -1,0 +1,21 @@
+.App {
+  text-align: center;
+}
+
+.App>ol {
+  width: 80%;
+  margin: auto;
+}
+
+.App>ol>li {
+  text-align: left;
+}
+
+li+li {
+  margin-top: 15px;
+}
+
+hr {
+  width: 60%;
+  margin: 15px auto;
+}

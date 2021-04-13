@@ -19,7 +19,8 @@ class App extends Component {
       { id: 'baz', name: 'Stephanie', age: 26 }
     ],  
     showPersons: false,
-    showCockpit: true
+    showCockpit: true,
+    changeCounter: 0
   };
 
   static getDerivedStateFromProps( props, state ) {
@@ -55,7 +56,18 @@ class App extends Component {
     persons[ personIndex ] = person;
 
     // Update the state
-    this.setState( { persons: persons } );
+    // Passing a function instead of object due to new changeCounter value
+    // using the previous state (it is unreliable when using this.state)
+    // this.setState( {
+    //   persons: persons,
+    //   changeCounter: this.state.changeCounter + 1
+    // } );
+    this.setState( ( prevState, props ) => {
+      return {
+        persons: persons,
+        changeCounter: prevState.changeCounter + 1
+      };
+    } );
   }  
 
   togglePersonsHandler = () => {

@@ -1,15 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import classes from './Cockpit.css';
 
 const cockpit = ( props ) => {
+  const toggleBtnRef = useRef( null );
+  
   // Last argument is an array of props that must change for the function to be run
   useEffect( () => {
     console.log( '[Cockpit.js] useEffect' );
-
-    // Fake http request
-    setTimeout(() => {
-      alert( 'Saved date to cloud!' );
-    }, 1000);
+    
+    // On first render, click the toggle button
+    toggleBtnRef.current.click();
+    
+    // // Fake http request
+    // setTimeout(() => {
+    //   alert( 'Saved date to cloud!' );
+    // }, 1000);
     // Return a function that will run when the component unmounts
     return () => {
       console.log(' [Cockpit.js] cleanup work in useEffect' );
@@ -48,6 +53,7 @@ const cockpit = ( props ) => {
       <h1>{ props.title }</h1>
       <p className={ paragraphClasses.join( ' ' ) } >This is really working!</p>
       <button
+        ref={ toggleBtnRef }
         className={ buttonClasses.join( ' ' ) }
         onClick={ () => props.toggle() } >Toggle Persons</button>
     </div>

@@ -19,7 +19,8 @@ class Persons extends Component {
     // NOTE: This compare is comparing the pointers to the persons arrays
     //       This is okay because when we change it via the onClick and onChange events
     //       we create a new array, thereby changing the pointer.
-    return this.props.persons !== nextProps.persons;
+    return this.props.persons !== nextProps.persons ||
+            this.props.isAuthenticated !== nextProps.isAuthenticated;
   }
 
   getSnapshotBeforeUpdate( prevProps, prevState ) {
@@ -49,7 +50,8 @@ class Persons extends Component {
           age={ person.age }
           key={ person.id }
           click={ () => this.props.clicked( index ) }
-          changed={ ( event )=> this.props.changed( event, person.id ) } />
+          changed={ ( event )=> this.props.changed( event, person.id ) }
+          isAuth={ this.props.isAuthenticated } />
       );
     } );
   }

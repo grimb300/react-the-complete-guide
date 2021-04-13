@@ -15,6 +15,7 @@ const cockpit = ( props ) => {
     // setTimeout(() => {
     //   alert( 'Saved date to cloud!' );
     // }, 1000);
+
     // Return a function that will run when the component unmounts
     return () => {
       console.log(' [Cockpit.js] cleanup work in useEffect' );
@@ -56,6 +57,9 @@ const cockpit = ( props ) => {
         ref={ toggleBtnRef }
         className={ buttonClasses.join( ' ' ) }
         onClick={ () => props.toggle() } >Toggle Persons</button>
+      <button
+        className={ classes.Button }
+        onClick={ props.login }>Log in</button>
     </div>
   );
 

@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import classes from './Cockpit.css';
 import AuthContext from '../../context/auth-context';
 
 const cockpit = ( props ) => {
   const toggleBtnRef = useRef( null );
+  const authContext = useContext( AuthContext );
   
   // Last argument is an array of props that must change for the function to be run
   useEffect( () => {
@@ -58,13 +59,9 @@ const cockpit = ( props ) => {
         ref={ toggleBtnRef }
         className={ buttonClasses.join( ' ' ) }
         onClick={ () => props.toggle() } >Toggle Persons</button>
-      <AuthContext.Consumer>
-        { context => (
-          <button
-            className={ classes.Button }
-            onClick={ context.login }>Log in</button>
-        ) }
-      </AuthContext.Consumer>
+      <button
+        className={ classes.Button }
+        onClick={ authContext.login }>Log in</button>
     </div>
   );
 

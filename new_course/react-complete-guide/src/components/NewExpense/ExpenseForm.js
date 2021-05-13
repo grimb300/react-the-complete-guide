@@ -3,6 +3,12 @@ import React, { useState } from "react";
 import "./ExpenseForm.css";
 
 const ExpenseForm = (props) => {
+  const [hideForm, setHideForm] = useState(true);
+
+  const toggleFormHandler = () => {
+    setHideForm((prevState) => !prevState);
+  };
+
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredAmount, setEnteredAmount] = useState("");
   const [enteredDate, setEnteredDate] = useState("");
@@ -22,7 +28,7 @@ const ExpenseForm = (props) => {
 
     const expenseData = {
       title: enteredTitle,
-      amount: enteredAmount,
+      amount: parseInt(enteredAmount),
       date: new Date(enteredDate),
     };
 
@@ -33,7 +39,14 @@ const ExpenseForm = (props) => {
     setEnteredTitle("");
     setEnteredAmount("");
     setEnteredDate("");
+
+    // Hide the form
+    toggleFormHandler();
   };
+
+  if (hideForm) {
+    return <button onClick={toggleFormHandler}>Add New Expense</button>;
+  }
 
   return (
     <form onSubmit={submitHandler}>
@@ -68,6 +81,7 @@ const ExpenseForm = (props) => {
         </div>
       </div>
       <div className="new_expense__actions">
+        <button onClick={toggleFormHandler}>Cancel</button>
         <button type="submit">Add Expense</button>
       </div>
     </form>

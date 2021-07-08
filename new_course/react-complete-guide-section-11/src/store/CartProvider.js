@@ -8,55 +8,74 @@ const defaultCartState = {
 };
 
 const cartReducer = (state, action) => {
-  console.log(`Saw cartReducer with`);
-  console.log(action);
-  if (action.type === "ADD") {
-    const updatedTotalAmount =
-      state.totalAmount + action.item.price * action.item.amount;
+  // I'm deviating from how the instructor is doing things here.
+  // I find he's repeating code a little too much for my taste.
 
-    // If the item exists in the cart, update the item. If not, add the item to the cart.
-    const existingCartItemIndex = state.items.findIndex(
-      (item) => item.id === action.item.id
-    );
-    const existingCartItem = state.items[existingCartItemIndex];
-    let updatedItems;
+  // If it is not a recognized action type, return the default state
+  const isAdd = action.type === "ADD";
+  const isRemove = action.type === "REMOVE";
+  if (!(isAdd || isRemove)) {
+    return defaultCartState;
+  }
+
+  // Make a copy of the current cart items and total amount to be updated
+  let updatedCartItems = [...state.items];
+  let updatedTotalAmount = state.totalAmount;
+
+  // The item ID to update depends on the action type
+  const updatedCartItemId = isAdd ? action.item.id : action.id;
+
+  // Find the existing item index by the ID
+  const cartItemIndex = state.items.findIndex(
+    (item) => item.id === updatedCartItemId
+  );
+  const existingCartItem = state.items[cartItemIndex];
+
+  // If it is an ADD action
+  if (isAdd) {
+    // Check if there is an existing item
     if (existingCartItem) {
-      const updatedItem = {
+      // Update the existing item total
+      updatedCartItems[cartItemIndex] = {
         ...existingCartItem,
         amount: existingCartItem.amount + action.item.amount,
       };
-      updatedItems = [...state.items];
-      updatedItems[existingCartItemIndex] = updatedItem;
     } else {
-      updatedItems = state.items.concat(action.item);
+      // Add the new item to the list
+      updatedCartItems = state.items.concat(action.item);
     }
-    return { items: updatedItems, totalAmount: updatedTotalAmount };
+
+    // Update the total amount
+    updatedTotalAmount =
+      state.totalAmount + action.item.price * action.item.amount;
   }
-  if (action.type === "REMOVE") {
-    const existingCartItemIndex = state.items.findIndex(
-      (item) => item.id === action.id
-    );
-    const existingCartItem = state.items[existingCartItemIndex];
-    console.log(`existingCartItemIndex is ${existingCartItemIndex}`);
+
+  // If it is a REMOVE action
+  if (isRemove) {
+    // Check if there is an existing item
     if (existingCartItem) {
-      console.log("Item exists");
-      const updatedTotalAmount = state.totalAmount - existingCartItem.price;
-      const updatedItem = {
-        ...existingCartItem,
-        amount: existingCartItem.amount - 1,
-      };
+      // Check if the existing item amount is 1
+      if (existingCartItem.amount === 1) {
+        // Completely remove the item from the list
+        updatedCartItems = state.items.filter(
+          (item) => item.id !== updatedCartItemId
+        );
+      } else {
+        // Reduce the item amount by 1
+        updatedCartItems[cartItemIndex] = {
+          ...existingCartItem,
+          amount: existingCartItem.amount - 1,
+        };
+      }
 
-      const updatedItems = [...state.items];
-      updatedItems[existingCartItemIndex] = updatedItem;
-
-      // Filter out any cart item that has zero items
-      const filteredItems = updatedItems.filter((item) => item.amount > 0);
-
-      return { items: filteredItems, totalAmount: updatedTotalAmount };
+      // Update the total amount
+      updatedTotalAmount = state.totalAmount - existingCartItem.price;
     }
-    return state;
+    // If there is no existing item, do nothing
   }
-  return defaultCartState;
+
+  // Return the updated state
+  return { items: updatedCartItems, totalAmount: updatedTotalAmount };
 };
 
 const CartProvider = (props) => {
